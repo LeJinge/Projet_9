@@ -1,10 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Suivi des Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Système de recherche d'utilisateur -->
+    <div class="row mb-4">
+        <div class="col">
+            <form action="{% url 'subscription_view' %}" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Rechercher un utilisateur" name="q">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Résultats de la recherche -->
+    {% if search_results %}
+        <div class="row mb-4">
+            <div class="col">
+                <h4>Résultats de recherche :</h4>
+                <ul class="list-group">
+                    {% for user in search_results %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ user.username }}
+                            <form action="{% url 'subscription_view' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_to_follow_id" value="{{ user.id }}">
+                                <button type="submit" class="btn btn-primary btn-sm">Suivre</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Visualisation des abonnements -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h3>Utilisateurs suivis</h3>
+            <ul class="list-group">
+                {% for suivi in utilisateurs_suivis %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ suivi.followed_user.username }} <!-- Utilisez l'objet suivi ici -->
+                    <form action="{% url 'subscription_view' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_to_unfollow_id" value="{{ suivi.followed_user.id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Se désabonner</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Visualisation des abonnés -->
+        <div class="col-md-6">
+            <h3>Abonnés</h3>
+            <ul class="list-group">
+                {% for abonne in abonnes %}
+                <li class="list-group-item">
+                    {{ abonne.user.username }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
