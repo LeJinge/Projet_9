@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y=y893%lf^78b37^29rxc4%nn)m8n7$qt!v-78%_3z(gd0l)3+'
+SECRET_KEY = 'django-insecure-d%c9tdfk64ig-guex2=z3yn)_-uw9ko!ekbhhx@gld28u=fg%%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user',
+    'review',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,11 @@ ROOT_URLCONF = 'Projet_9.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'user', 'templates'),
+            os.path.join(BASE_DIR, 'Projet_9', 'templates'),
+            os.path.join(BASE_DIR, 'review', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Projet_9.wsgi.application'
+WSGI_APPLICATION = 'Projet_9_test.wsgi.application'
 
 
 # Database
@@ -115,9 +121,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'Projet_9', 'static'),
+    os.path.join(BASE_DIR, 'review', 'static'),
+    os.path.join(BASE_DIR, 'user', 'static'),
+]
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Chemin où les fichiers médias seront stockés
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# URL utilisée pour accéder aux médias via le navigateur
+MEDIA_URL = '/media/'
