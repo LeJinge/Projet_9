@@ -3,6 +3,7 @@ from itertools import chain
 from operator import attrgetter
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import Exists, OuterRef, Value, CharField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -44,6 +45,29 @@ def user_feed_view(request):
     )
 
     return render(request, 'review/feed.html', {'posts': combined_posts, 'show_navbar': True})
+
+
+@login_required
+def user_posts_view(request):
+    current_user = request.user
+
+    # Récupérer tous les tickets, y compris ceux liés à des reviews indépendantes
+    tickets = Ticket.objects.filter(user=current_user).prefetch_related('reviews')
+
+    # Récupérer toutes les reviews, y compris les indépendantes
+    reviews = Review.objects.filter(user=current_user).select_related('ticket')
+
+    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+
+    # Combiner tickets et reviews
+    combined_posts = sorted(
+        chain(tickets, reviews),
+        key=attrgetter('time_created'),
+        reverse=True
+    )
+
+    return render(request, 'review/post.html', {'posts': combined_posts, 'show_navbar': True})
 
 
 @login_required
@@ -151,3 +175,88 @@ def create_review_response_view(request, ticket_id):
         review_form = ReviewForm()
 
     return render(request, 'review/create_review_response.html', {'review_form': review_form, 'ticket': ticket})
+
+
+@login_required
+def edit_ticket_view(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id, user=request.user)
+
+    if request.method == 'POST':
+        form = TicketForm(request.POST, request.FILES, instance=ticket)
+        if form.is_valid():
+            # Enregistrer les modifications apportées au ticket
+            form.save()
+
+            # Renommer l'image si une nouvelle a été téléchargée
+            if 'image' in request.FILES:
+                # Définir le nouveau nom de fichier
+                new_file_name = f"{ticket.id}_{ticket.title.replace(' ', '_')}{os.path.splitext(ticket.image.name)[1]}"
+
+                # Définir le nouveau chemin de fichier
+                new_file_path = os.path.join('media/tickets', new_file_name)
+
+                # Obtenir le chemin actuel de l'image après la sauvegarde
+                current_image_path = ticket.image.path
+
+                # Renommer le fichier dans le système de fichiers
+                os.rename(current_image_path, new_file_path)
+
+                # Mettre à jour le chemin de l'image dans l'objet ticket
+                ticket.image = 'tickets/' + new_file_name
+                ticket.save()
+
+            return redirect('user_feed')
+    else:
+        form = TicketForm(instance=ticket)
+
+    return render(request, 'review/edit_ticket.html', {'form': form})
+
+
+@login_required
+def edit_review_view(request, review_id):
+    review = get_object_or_404(Review, id=review_id, user=request.user)  # Assurez-vous que seul le propriétaire peut modifier
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('user_feed')  # Rediriger où vous voulez après la modification
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'review/edit_review.html', {'form': form})
+
+
+@login_required
+def delete_post_view(request, post_id, post_type):
+    if request.method == 'POST':
+        with transaction.atomic():  # Utiliser une transaction pour assurer l'intégrité des données
+            if post_type == 'TICKET':
+                ticket = get_object_or_404(Ticket, id=post_id, user=request.user)
+
+                # Supprimer l'image du système de fichiers si elle existe
+                if ticket.image:
+                    if os.path.isfile(ticket.image.path):
+                        os.remove(ticket.image.path)
+
+                # Supprimer le ticket de la base de données
+                ticket.delete()
+
+            elif post_type == 'REVIEW':
+                review = get_object_or_404(Review, id=post_id, user=request.user)
+                if review.is_independent_review:
+                    # Si c'est une review indépendante, supprimer aussi le ticket associé
+                    ticket = review.ticket
+
+                    # Supprimer l'image du système de fichiers si elle existe
+                    if ticket.image and os.path.isfile(ticket.image.path):
+                        os.remove(ticket.image.path)
+
+                    review.delete()
+                    ticket.delete()
+                else:
+                    review.delete()
+
+            else:
+                return redirect('post')  # Retourner à la liste des posts si le type est inconnu
+
+    return redirect('post')

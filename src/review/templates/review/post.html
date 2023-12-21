@@ -1,10 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Mes Posts{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-8 mx-auto">
+            {% for post in posts %}
+                <!-- Modal de Suppression pour chaque post -->
+                <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer ce post ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form action="{% url 'delete_post' post.id post.content_type %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if post.content_type == 'TICKET' %}
+                    <!-- Affichage du ticket -->
+                    {% if not post.in_independent_review %}
+                        <!-- Affichage du ticket sans review -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}"
+                                         alt="{{ post.title }}"
+                                         class="img-thumbnail img-fluid rounded float-end"
+                                         style="max-height : 250px; width : auto;">
+                                {% endif %}
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p class="card-text">{{ post.description }}</p>
+                                <a href="{% url 'edit_ticket' post.id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">Supprimer</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% elif post.content_type == 'REVIEW' %}
+                    {% if not post.is_independent_review %}
+                        <!-- Affichage du ticket avec review -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Critique : {{ post.headline }}</h5>
+                                <!-- Div pour les étoiles, avec data-rating -->
+                                <div class="review" data-rating="{{ post.rating }}">
+                                    <!-- Les étoiles seront placées ici par le script JavaScript -->
+                                </div>
+                                <p class="card-text">{{ post.body }}</p>
+                                <a href="{% url 'edit_review' post.id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">Supprimer</button>
+                            </div>
+                            <hr> <!-- séparateur entre le ticket et la critique -->
+                            <div class="card-body">
+                                <!-- Affichage du ticket -->
+                                <h5 class="card-title">Ticket : {{ post.ticket.title }}</h5>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if post.is_independent_review %}
+                        <!-- Affichage des reviews indépendantes avec le ticket correspondant -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <!-- Affichage du ticket -->
+                                {% if post.ticket.image %}
+                                    <img src="{{ post.ticket.image.url }}"
+                                         alt="{{ post.ticket.title }}"
+                                         class="img-thumbnail img-fluid rounded float-end"
+                                         style="max-height : 300px; width : auto;">
+                                {% endif %}
+                                <p>Posté par : {{ post.ticket.user.username }} à {{ post.ticket.time_created }} </p>
+                                <h5 class="card-title">{{ post.ticket.title }}</h5>
+                                <p class="card-text">{{ post.ticket.description }}</p>
+                                <a href="{% url 'edit_ticket' post.ticket_id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                            </div>
+                                <!-- Affichage de la critique indépendante -->
+                                <hr> <!-- séparateur entre le ticket et la critique -->
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.headline }}</h5>
+                                <!-- Div pour les étoiles, avec data-rating -->
+                                <div class="review" data-rating="{{ post.rating }}">
+                                    <!-- Les étoiles seront placées ici par le script JavaScript -->
+                                </div>
+                                <p class="card-text">{{ post.body }}</p>
+                                <a href="{% url 'edit_review' post.id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">Supprimer</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
