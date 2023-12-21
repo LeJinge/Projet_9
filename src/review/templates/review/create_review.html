@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Créer une Critique{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Créer une Critique</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <h3>Information sur le Livre/Article</h3>
+            <label>Titre :</label>
+            <div>
+                {{ ticket_form.title }}
+            </div>
+            <label>Description :</label>
+            <div>
+                {{ ticket_form.description }}
+            </div>
+            <label>Image :</label>
+            <div>
+                {{ ticket_form.image }}
+            </div>
+        </div>
+        <div>
+            <h3>Détails de la Critique</h3>
+            <!-- Affichage champs du formulaire de review -->
+            <div>
+                <label>Titre de la critique :</label>
+                <div>
+                    {{review_form.headline}}
+                </div>
+            </div>
+            <div>
+                <label>Corps de la critique :</label>
+                <div>
+                    {{review_form.body}}
+                </div>
+            </div>
+            <!-- Étoiles pour la notation -->
+            <div>
+                <label for="ratingInput">Votre note :</label>
+                <div class="rating">
+                    {% for star in "12345" %}
+                        <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
+                    {% endfor %}
+                </div>
+                <input type="hidden" id="ratingInput" name="rating">
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
