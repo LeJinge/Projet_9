@@ -3,12 +3,32 @@
 {% block title %}Modifier le Ticket{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Modifier le Ticket</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-    </form>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-body">
+            <h2 class="text-center mb-4">Modifier le Ticket</h2>
+            <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div>
+                        <h3>Information sur le Livre/Article</h3>
+                        <label>Titre</label>
+                        <div>
+                            {{ form.title }}
+                        </div>
+                        <label>Description :</label>
+                        <div>
+                            {{ form.description }}
+                        </div>
+                        <label>Image :</label>
+                        <div>
+                            {{ form.image }}
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

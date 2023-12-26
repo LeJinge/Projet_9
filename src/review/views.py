@@ -1,19 +1,17 @@
 import os
+
+from django.db import transaction
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Ticket, Review
+from user.models import UserFollows
 from itertools import chain
 from operator import attrgetter
-
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.db.models import Exists, OuterRef, Value, CharField
-from django.shortcuts import render, redirect, get_object_or_404
+from .forms import TicketForm, ReviewForm
+from django.db.models import CharField, Value, Exists, OuterRef
 from django.contrib import messages
 
-from .forms import TicketForm, ReviewForm
-from src.review.models import Ticket, Review
-from src.user.models import UserFollows
 
-
-# Create your views here.
 def user_feed_view(request):
     current_user = request.user
     followed_users_ids = UserFollows.objects.filter(user=current_user).values_list('followed_user', flat=True)

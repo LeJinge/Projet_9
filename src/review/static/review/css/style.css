@@ -1,0 +1,10 @@
+.star-rating label {
+    color: white; /* Couleur par défaut des étoiles */
+    cursor: pointer;
+}
+
+.star-rating label.hover,
+.star-rating label:hover,
+.star-rating label.selected {
+    color: yellow; /* Couleur des étoiles au survol et sélection */
+}

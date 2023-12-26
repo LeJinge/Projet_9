@@ -3,54 +3,66 @@
 {% block title %}Créer une Critique{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Créer une Critique</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div>
-            <h3>Information sur le Livre/Article</h3>
-            <label>Titre :</label>
-            <div>
-                {{ ticket_form.title }}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-body">
+            <h2 class="text-center mb-4">Créer une Critique</h2>
+            <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div>
+                        <h3>Information sur le Livre/Article</h3>
+                        <label>Titre </label>
+                        <div>
+                            {{ ticket_form.title }}
+                        </div>
+                        <label>Description :</label>
+                        <div>
+                            {{ ticket_form.description }}
+                        </div>
+                        <label>Image :</label>
+                        <div>
+                            {{ ticket_form.image }}
+                        </div>
+                    </div>
+                </form>
             </div>
-            <label>Description :</label>
-            <div>
-                {{ ticket_form.description }}
-            </div>
-            <label>Image :</label>
-            <div>
-                {{ ticket_form.image }}
+            <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
+                <form method="post">
+                    {% csrf_token %}
+                    <div>
+                        <h3>Détails de la Critique</h3>
+                        <!-- Affichage champs du formulaire de review -->
+                        <div>
+                            <label>Titre de la critique :</label>
+                            <div>
+                                {{ review_form.headline }}
+                            </div>
+                        </div>
+                        <div>
+                            <label>Corps de la critique :</label>
+                            <div>
+                                {{ review_form.body }}
+                            </div>
+                        </div>
+                        <!-- Étoiles pour la notation -->
+                        <div>
+                            <label for="ratingInput">Votre note :</label>
+                            <div class="rating">
+                                {% for star in "12345" %}
+                                    <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" id="ratingInput" name="rating">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div>
-            <h3>Détails de la Critique</h3>
-            <!-- Affichage champs du formulaire de review -->
-            <div>
-                <label>Titre de la critique :</label>
-                <div>
-                    {{review_form.headline}}
-                </div>
-            </div>
-            <div>
-                <label>Corps de la critique :</label>
-                <div>
-                    {{review_form.body}}
-                </div>
-            </div>
-            <!-- Étoiles pour la notation -->
-            <div>
-                <label for="ratingInput">Votre note :</label>
-                <div class="rating">
-                    {% for star in "12345" %}
-                        <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
-                    {% endfor %}
-                </div>
-                <input type="hidden" id="ratingInput" name="rating">
-            </div>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
-        </div>
-    </form>
+    </div>
 </div>
 {% endblock %}
+

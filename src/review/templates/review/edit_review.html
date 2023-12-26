@@ -1,42 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}Répondre à un Ticket{% endblock %}
+{% block title %}Modifier une Critique{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Modifier une critique</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            <h3>Détails de la Critique</h3>
-            <!-- Affichage champs du formulaire de review -->
+<div class="container">
+    <h2 class="text-center mb-4">Modifier une Critique</h2>
+    <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
+        <form method="post">
+            {% csrf_token %}
             <div>
-                <label>Titre de la critique :</label>
+                <h3>Détails de la Critique</h3>
+                <!-- Affichage champs du formulaire de review -->
                 <div>
-                    {{form.headline}}
+                    <label>Titre de la critique :</label>
+                    <div>
+                        {{ form.headline }}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <label>Corps de la critique :</label>
                 <div>
-                    {{form.body}}
+                    <label>Corps de la critique :</label>
+                    <div>
+                        {{ form.body }}
+                    </div>
+                </div>
+                <!-- Étoiles pour la notation -->
+                <div>
+                    <label for="ratingInput">Votre note :</label>
+                    <div class="rating">
+                        {% for star in "12345" %}
+                            <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="ratingInput" name="rating">
                 </div>
             </div>
-            <!-- Étoiles pour la notation -->
             <div>
-                <label for="ratingInput">Votre note :</label>
-                <div class="rating">
-                    {% for star in "12345" %}
-                        <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
-                    {% endfor %}
-                </div>
-                <input type="hidden" id="ratingInput" name="rating">
+                <button type="submit" class="btn btn-primary">Mettre à jour la Critique</button>
             </div>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% endblock %}
