@@ -1,6 +1,7 @@
 # Projet 9 - Développez une application Web en utilisant Django
 
-Une brève description de ce que fait votre projet.
+Le projet consiste à créer un site de critique de livres et d'articles. Les utilisateurs pourront demander une critique
+d'un livre, répondre à une critique ou consulter les critiques des utilisateurs auxquels il est abonné.  
 
 ## Prérequis
 
@@ -14,7 +15,8 @@ Suivez ces étapes pour installer et configurer le projet sur votre machine loca
 
 ### Cloner le Répertoire
 
-Pour récupérer le projet depuis Git, ouvrez votre terminal, aller dans le dossier où vous souhaitez cloner le projet et exécuter la commande suivante :
+Pour récupérer le projet depuis Git, ouvrez votre terminal, aller dans le dossier où vous souhaitez cloner le projet et
+exécuter la commande suivante :
 
 git clone https://github.com/LeJinge/Projet_9.git
 
