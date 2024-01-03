@@ -99,6 +99,3 @@ def subscription_view(request):
     }
 
     return render(request, 'user/subscription.html', context)
-
-
-

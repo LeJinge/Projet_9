@@ -23,11 +23,16 @@
 
                 <!-- Colonne pour le logo -->
                 <div class="col-lg-4 col-md-4 col-sm-2 col-xs-1 d-flex justify-content-center mt-3 mb-3 ">
-                    <a href="{% url 'user_feed' %}">
-                        <img src="{% static 'images/LITrevu banner.png' %}" alt="Logo" class="img-fluid" style="max-height: 100px;">
-                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'user_feed' %}">
+                            <img src="{% static 'images/LITrevu banner.png' %}" alt="Logo" class="img-fluid" style="max-height: 100px;">
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}"> <!-- Remplacez 'login' par le nom de votre URL de connexion -->
+                            <img src="{% static 'images/LITrevu banner.png' %}" alt="Logo" class="img-fluid" style="max-height: 100px;">
+                        </a>
+                    {% endif %}
                 </div>
-
                 <!-- Colonne pour la barre de navigation -->
                 {% if show_navbar %}
                     <div class="col-lg-4 col-md-6 col-sm-8 col-xs-10 d-flex justify-content-end ">

@@ -36,8 +36,8 @@ source .env/bin/activate
 
 - Sur Git Bash :
 
-cd Projet_9
 python -m venv .env
+
 source .env/Scripts/activate
 
 ### Installer les Dépendances
@@ -51,6 +51,7 @@ pip install -r requirements.txt
 Pour lancer le serveur de développement, exécutez :
 
 cd src
+
 python manage.py runserver
 
 Naviguez vers `http://127.0.0.1:8000/login` dans votre navigateur pour voir l'application en action.
