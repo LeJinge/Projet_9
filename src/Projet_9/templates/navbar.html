@@ -1,9 +1,9 @@
-<nav class="navbar navbar-expand-lg bg-transparent">
+<nav class="navbar navbar-expand-lg bg-transparent" aria-label="Navigation principale">
     <div class="container-fluid">
-    <!-- Contenu de la barre de navigation -->
-        <a class="navbar-brand mx-auto p-2 " href="{% url 'user_feed' %}">Flux</a>
-        <a class="navbar-brand mx-auto p-2" href="{% url 'post' %}">Post</a>
-        <a class="navbar-brand mx-auto p-2" href="{% url 'subscription_view' %}">Abonnements</a>
-        <a class="navbar-brand mx-auto p-2" href="{% url 'logout' %}">Déconnexion</a>
+        <!-- Contenu de la barre de navigation -->
+        <a class="navbar-brand mx-auto p-2" href="{% url 'user_feed' %}" aria-label="Aller au Flux">Flux</a>
+        <a class="navbar-brand mx-auto p-2" href="{% url 'post' %}" aria-label="Publier un Post">Post</a>
+        <a class="navbar-brand mx-auto p-2" href="{% url 'subscription_view' %}" aria-label="Gérer les Abonnements">Abonnements</a>
+        <a class="navbar-brand mx-auto p-2" href="{% url 'logout' %}" aria-label="Se Déconnecter">Déconnexion</a>
     </div>
 </nav>

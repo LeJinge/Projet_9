@@ -4,52 +4,43 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="text-center mb-4">Répondre à un Ticket</h2>
-    <div class=" bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2 clearfix">
+    <h1 class="text-center mb-4">Répondre à un Ticket</h1>
+    <section class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2 clearfix" aria-labelledby="ticketTitle">
         <div class="card-body">
             {% if ticket.image %}
                 <img src="{{ ticket.image.url }}"
-                     alt="{{ ticket.title }}"
+                     alt="Image du ticket: {{ ticket.title }}"
                      class="img-thumbnail img-fluid rounded float-end"
-                     style="max-height : 250px; width : auto;">
+                     style="max-height: 250px; width: auto;">
             {% endif %}
-            <h5 class="card-title mb-4">{{ ticket.title }}</h5>
+            <h2 id="ticketTitle" class="card-title mb-4">{{ ticket.title }}</h2>
             <p class="card-text">{{ ticket.description }}</p>
         </div>
-    </div>
-    <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
+    </section>
+
+    <section class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2" aria-labelledby="reviewDetails">
         <form method="post">
             {% csrf_token %}
-            <div>
-                <h3>Détails de la Critique</h3>
-                <!-- Affichage champs du formulaire de review -->
-                <div>
-                    <label>Titre de la critique :</label>
-                    <div>
-                        {{review_form.headline}}
-                    </div>
-                </div>
-                <div>
-                    <label>Corps de la critique :</label>
-                    <div>
-                        {{review_form.body}}
-                    </div>
-                </div>
-                <!-- Étoiles pour la notation -->
-                <div>
-                    <label for="ratingInput">Votre note :</label>
-                    <div class="rating">
-                        {% for star in "12345" %}
-                            <i class="bi bi-star" data-rating="{{ forloop.counter }}"></i>
-                        {% endfor %}
-                    </div>
-                    <input type="hidden" id="ratingInput" name="rating">
-                </div>
+            <h2 id="reviewDetails">Détails de la Critique</h2>
+            <div class="form-group">
+                <label for="headlineField">Titre de la critique :</label>
+                <input type="text" id="headlineField" class="form-control" name="headline" value="{{ review_form.headline.value|default_if_none:'' }}">
             </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
+            <div class="form-group">
+                <label for="bodyField">Corps de la critique :</label>
+                <textarea id="bodyField" class="form-control" name="body">{{ review_form.body.value|default_if_none:'' }}</textarea>
             </div>
+            <div class="form-group">
+                <label for="ratingInput">Votre note :</label>
+                <div class="rating" aria-label="Notez cet article">
+                    {% for star in "12345" %}
+                        <i class="bi bi-star" data-rating="{{ forloop.counter }}" tabindex="0" role="button" aria-label="Étoile {{ forloop.counter }}"></i>
+                    {% endfor %}
+                </div>
+                <input type="hidden" id="ratingInput" name="rating">
+            </div>
+            <button type="submit" class="btn btn-primary">Soumettre la Critique</button>
         </form>
-    </div>
+    </section>
 </div>
 {% endblock %}

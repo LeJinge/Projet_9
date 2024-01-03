@@ -6,26 +6,28 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-6 text-body">
-            <h2 class="text-center mb-4" >Créer un Ticket</h2>
+            <h1 class="text-center mb-4">Créer un Ticket</h1>
             <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
-               <form method="post" enctype="multipart/form-data">
-                   {% csrf_token %}
-                    <div>
-                        <h3>Information sur le Livre/Article</h3>
-                        <label>Titre </label>
-                        <div>
-                            {{ form.title }}
-                        </div>
-                        <label>Description :</label>
-                        <div>
-                            {{ form.description }}
-                        </div>
-                        <label>Image :</label>
-                        <div>
-                            {{ form.image }}
-                        </div>
+                <form method="post" enctype="multipart/form-data" aria-labelledby="formTitle">
+                    {% csrf_token %}
+                    <h2 id="formTitle">Information sur le Livre/Article</h2>
+                    <div class="form-group mb-3">
+                        <label for="titleField">Titre</label>
+                        <input type="text" id="titleField" class="form-control" name="title" aria-describedby="titleHelp" value="{{ form.title.value|default_if_none:'' }}">
+                        <small id="titleHelp" class="form-text text-muted">Entrez le titre du livre ou de l'article.</small>
                     </div>
-               </form>
+                    <div class="form-group mb-3">
+                        <label for="descriptionField">Description</label>
+                        <textarea id="descriptionField" class="form-control" name="description" aria-describedby="descriptionHelp">{{ form.description.value|default_if_none:'' }}</textarea>
+                        <small id="descriptionHelp" class="form-text text-muted">Fournissez une brève description.</small>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="imageField">Image</label>
+                        <input type="file" id="imageField" class="form-control-file" name="image" aria-describedby="imageHelp">
+                        <small id="imageHelp" class="form-text text-muted">Téléchargez une image du livre ou de l'article si disponible.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Soumettre</button>
+                </form>
             </div>
         </div>
     </div>

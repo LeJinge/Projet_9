@@ -21,11 +21,9 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 {% if post.image %}
-                                    <img src="{{ post.image.url }}"
-                                         alt="{{ post.title }}"
-                                         class="img-thumbnail img-fluid rounded float-end"
-                                         style="max-height : 250px; width : auto;">
+                                    <img src="{{ post.image.url }}" alt="Image liée au ticket intitulé {{ post.title }}" class="img-thumbnail img-fluid rounded float-end" style="max-height : 250px; width : auto;">
                                 {% endif %}
+                                <p class="card-text">Posté par : {{ post.user.username }} à {{ post.time_created }} </p>
                                 <h5 class="card-title">{{ post.title }}</h5>
                                 <p class="card-text">{{ post.description }}</p>
                                 {% if not post.user_has_responded and post.user != request.user %}
@@ -39,9 +37,10 @@
                         <!-- Affichage du ticket avec review -->
                         <div class="card mb-3">
                             <div class="card-body">
+                                <p>Posté par : {{ post.user.username }} à {{ post.time_created }} </p>
                                 <h5 class="card-title">Critique : {{ post.headline }}</h5>
                                 <!-- Div pour les étoiles, avec data-rating -->
-                                <div class="review" data-rating="{{ post.rating }}">
+                                <div class="review" data-rating="{{ post.rating }}" aria-label="Note de la critique : {{ post.rating }} sur 5">
                                     <!-- Les étoiles seront placées ici par le script JavaScript -->
                                 </div>
                                 <p class="card-text">{{ post.body }}</p>
@@ -49,6 +48,7 @@
                             <hr> <!-- séparateur entre le ticket et la critique -->
                             <div class="card-body">
                                 <!-- Affichage du ticket -->
+                                <p>Posté par : {{ post.ticket.user.username }} à {{ post.ticket.time_created }} </p>
                                 <h5 class="card-title">Ticket : {{ post.ticket.title }}</h5>
                             </div>
                         </div>
@@ -59,21 +59,18 @@
                             <div class="card-body">
                                 <!-- Affichage du ticket -->
                                 {% if post.ticket.image %}
-                                    <img src="{{ post.ticket.image.url }}"
-                                         alt="{{ post.ticket.title }}"
-                                         class="img-thumbnail img-fluid rounded float-end"
-                                         style="max-height : 300px; width : auto;">
+                                    <img src="{{ post.ticket.image.url }}" alt="Image liée au ticket intitulé {{ post.ticket.title }}" class="img-thumbnail img-fluid rounded float-end" style="max-height : 300px; width : auto;">
                                 {% endif %}
                                 <p class="card-text">Posté par : {{ post.ticket.user.username }} à {{ post.ticket.time_created }} </p>
                                 <h5 class="card-title">{{ post.ticket.title }}</h5>
                                 <p class="card-text">{{ post.ticket.description }}</p>
                             </div>
-                                <!-- Affichage de la critique indépendante -->
-                                <hr> <!-- séparateur entre le ticket et la critique -->
+                            <!-- Affichage de la critique indépendante -->
+                            <hr> <!-- séparateur entre le ticket et la critique -->
                             <div class="card-body">
                                 <h5 class="card-title">{{ post.headline }}</h5>
                                 <!-- Div pour les étoiles, avec data-rating -->
-                               <div class="review" data-rating="{{ post.rating }}">
+                               <div class="review" data-rating="{{ post.rating }}" aria-label="Note de la critique : {{ post.rating }} sur 5">
                                     <!-- Les étoiles seront placées ici par le script JavaScript -->
                                </div>
                                 <p class="card-text">{{ post.body }}</p>

@@ -1,31 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Modifier le Ticket{% endblock %}
+{% block title %}Modifier un Ticket{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-6 text-body">
-            <h2 class="text-center mb-4">Modifier le Ticket</h2>
+            <h1 class="text-center mb-4">Modifier un Ticket</h1>
             <div class="bg-light bg-gradient border border-light rounded-2 shadow-sm p-5 m-2">
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" aria-labelledby="formTitle">
                     {% csrf_token %}
-                    <div>
-                        <h3>Information sur le Livre/Article</h3>
-                        <label>Titre</label>
-                        <div>
-                            {{ form.title }}
-                        </div>
-                        <label>Description :</label>
-                        <div>
-                            {{ form.description }}
-                        </div>
-                        <label>Image :</label>
-                        <div>
-                            {{ form.image }}
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+                    <h2 class="mb-3" id="formTitle">Information sur le Livre/Article</h2>
+                    <div class="form-group mb-3">
+                        <label for="titleField">Titre</label>
+                        <input type="text" id="titleField" class="form-control" name="title" value="{{ form.title.value|default_if_none:'' }}">
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="descriptionField">Description</label>
+                        <textarea id="descriptionField" class="form-control" name="description">{{ form.description.value|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="imageField">Image</label>
+                        <input type="file" id="imageField" class="form-control-file" name="image">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2" >Mettre à jour le Ticket</button>
                 </form>
             </div>
         </div>
